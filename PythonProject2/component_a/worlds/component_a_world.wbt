@@ -1,0 +1,130 @@
+#VRML_SIM R2025a utf8
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/backgrounds/protos/TexturedBackground.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/backgrounds/protos/TexturedBackgroundLight.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/floors/protos/RectangleArena.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/robots/gctronic/e-puck/protos/E-puck.proto"
+# ============================================================
+# COMPONENT A WORLD
+# Autonomous Mobile Robot: Perception, Planning, Control
+#
+# Robot: e-puck (built-in Webots model)
+#   - Camera: used for OpenCV-based obstacle/landmark detection
+#   - 8x IR distance sensors (ps0-ps7): used as our "range scan"
+#     modality in place of a dedicated LiDAR device.
+#
+# Design justification (also goes in report Methodology):
+#   The e-puck's 8 IR distance sensors are arranged radially
+#   around the chassis and provide range readings in multiple
+#   directions simultaneously, functionally equivalent to a
+#   coarse-resolution LiDAR sweep for the purposes of this
+#   assignment's sensor-fusion requirement. This avoids the
+#   added complexity/fragility of composing a separate LiDAR
+#   PROTO onto the e-puck's extension slot, which is a common
+#   source of setup failures on first-time Webots installs.
+#   The assignment explicitly permits "LiDAR range scans AND/OR
+#   camera images", so this substitution is within scope.
+# ============================================================
+
+WorldInfo {
+  info [
+    "Component A: Perception, Motion Planning and Control"
+  ]
+  title "Component A - Mobile Robot Navigation"
+  basicTimeStep 16
+}
+Viewpoint {
+  orientation -0.577 0.577 0.577 2.094
+  position 0 0 4.5
+}
+TexturedBackground {
+}
+TexturedBackgroundLight {
+}
+RectangleArena {
+  translation 0 0 0
+  floorSize 3 3
+  floorTileSize 0.5 0.5
+  wallHeight 0.3
+}
+
+# --- Static obstacles (form the environment the robot must map/plan around) ---
+Solid {
+  translation 0.5 0.3 0.05
+  name "obstacle_1"
+  children [
+    Shape {
+      appearance PBRAppearance {
+        baseColor 0.8 0.2 0.2
+      }
+      geometry Box {
+        size 0.2 0.2 0.1
+      }
+    }
+  ]
+  boundingObject Box {
+    size 0.2 0.2 0.1
+  }
+}
+Solid {
+  translation -0.4 0.6 0.05
+  name "obstacle_2"
+  children [
+    Shape {
+      appearance PBRAppearance {
+        baseColor 0.2 0.6 0.2
+      }
+      geometry Cylinder {
+        height 0.1
+        radius 0.12
+      }
+    }
+  ]
+  boundingObject Cylinder {
+    height 0.1
+    radius 0.12
+  }
+}
+Solid {
+  translation 0.2 -0.5 0.05
+  name "obstacle_3"
+  children [
+    Shape {
+      appearance PBRAppearance {
+        baseColor 0.2 0.2 0.8
+      }
+      geometry Box {
+        size 0.15 0.4 0.1
+      }
+    }
+  ]
+  boundingObject Box {
+    size 0.15 0.4 0.1
+  }
+}
+Solid {
+  translation -0.7 -0.3 0.05
+  name "obstacle_4"
+  children [
+    Shape {
+      appearance PBRAppearance {
+        baseColor 0.9 0.7 0.1
+      }
+      geometry Box {
+        size 0.3 0.15 0.1
+      }
+    }
+  ]
+  boundingObject Box {
+    size 0.3 0.15 0.1
+  }
+}
+
+# --- The robot ---
+E-puck {
+  translation -1.0 -1.0 0
+  rotation 0 0 1 0.78
+  name "epuck"
+  controller "epuck_perception"
+  camera_width 128
+  camera_height 128
+}
